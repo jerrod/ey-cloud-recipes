@@ -11,7 +11,7 @@
 # require_recipe "collectd"
 
 #uncomment to turn on memcached
-# require_recipe "memcached"
+require_recipe "memcached"
 
 #uncomment ot run the riak recipe
 # require_recipe "riak"
@@ -50,7 +50,7 @@
 # require_recipe "resque-scheduler"
 
 #uncomment to run the redis recipe
-#require_recipe "redis"
+require_recipe "redis"
 
 #uncomment to run the api-keys-yml recipe
 # require_recipe "api-keys-yml"
@@ -74,7 +74,7 @@
 #require_recipe "mysql_administrative_tools"
 
 #uncomment to include the Elasticsearch recipe
-#require_recipe "elasticsearch"
+require_recipe "elasticsearch"
 
 # To install specific plugins to Elasticsearch see below as an example
 #es_plugin "cloud-aws" do
