@@ -2,8 +2,9 @@
 # Cookbook Name:: resque
 # Recipe:: default
 #
-if ['solo', 'util'].include?(node[:instance_role])
-  
+#if ['solo', 'util'].include?(node[:instance_role])
+role = node[:instance_role]
+if role == 'solo' || (role == 'util' && node[:name] =~ /resque/)
   execute "install resque gem" do
     command "gem install resque redis redis-namespace yajl-ruby -r"
     not_if { "gem list | grep resque" }
@@ -19,15 +20,15 @@ if ['solo', 'util'].include?(node[:instance_role])
 
   node[:applications].each do |app, data|
     template "/etc/monit.d/resque_#{app}.monitrc" do
-      owner 'root' 
-      group 'root' 
-      mode 0644 
-      source "monitrc.conf.erb" 
-      variables({ 
+      owner 'root'
+      group 'root'
+      mode 0644
+      source "monitrc.conf.erb"
+      variables({
       :num_workers => worker_count,
-      :app_name => app, 
-      :rails_env => node[:environment][:framework_env] 
-      }) 
+      :app_name => app,
+      :rails_env => node[:environment][:framework_env]
+      })
     end
 
     worker_count.times do |count|
@@ -39,11 +40,11 @@ if ['solo', 'util'].include?(node[:instance_role])
       end
     end
 
-    execute "ensure-resque-is-setup-with-monit" do 
+    execute "ensure-resque-is-setup-with-monit" do
       epic_fail true
-      command %Q{ 
-      monit reload 
-      } 
+      command %Q{
+      monit reload
+      }
     end
-  end 
+  end
 end

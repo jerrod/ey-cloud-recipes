@@ -18,3 +18,7 @@ gateway:
   recover_after_nodes: 1
   recover_after_time: 5m
   expected_nodes: <%= @elasticsearch_expected %>
+
+http:
+  max_initial_line_length: 128k
+  max_content_length: 500mb

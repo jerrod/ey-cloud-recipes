@@ -11,7 +11,8 @@
 # require_recipe "collectd"
 
 #uncomment to turn on memcached
-require_recipe "memcached"
+#require_recipe "memcached"
+require_recipe "ey_memcached_util"
 
 #uncomment ot run the riak recipe
 # require_recipe "riak"
@@ -41,7 +42,7 @@ require_recipe "memcached"
 #require_recipe "mongodb"
 
 #uncomment to run the resque recipe
-# require_recipe "resque"
+require_recipe "resque"
 
 #uncomment to run redis.yml recipe
 # require_recipe "redis-yml"

@@ -22,7 +22,7 @@ if ['util'].include?(node[:instance_role])
   remote_file "/tmp/elasticsearch-#{node[:elasticsearch_version]}.zip" do
     source "http://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-#{node[:elasticsearch_version]}.zip"
     mode "0644"
-    checksum node[:elasticsearch_checksum]
+    #checksum node[:elasticsearch_checksum]
     not_if { File.exists?("/tmp/elasticsearch-#{node[:elasticsearch_version]}.zip") }
   end
 
