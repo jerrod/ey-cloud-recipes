@@ -17,35 +17,63 @@
 # limitations under the License.
 #
 
-include_recipe "java"
+#include_recipe "java"
 
-version = node[:jruby_version]
-
-prefix =  node[:jruby_install_path]
-
-file "/etc/profile.d/jruby.sh" do
-  mode "0755"
-  content "export JRUBY_OPTS=\"-Xcompat.version=1.9 -Xcext.enabled=true\"\nexport PATH=/usr/local/share/jruby-1.7.1/bin:\$PATH:" + File.join(prefix, "bin") + "\n"
-  action :create
+Chef::Log.info "Downloading jruby v#{node[:jruby_version]} checksum #{node[:jruby_checksum]}"
+remote_file "/tmp/jruby-#{node[:jruby_version]}.tar.gz" do
+  source  "http://jruby.org.s3.amazonaws.com/downloads/#{node[:jruby_version]}/jruby-bin-#{node[:jruby_version]}.tar.gz"
+  mode "0644"
+  #checksum node[:jruby_checksum]
+  not_if { File.exists?("/tmp/jruby-#{node[:jruby_version]}.tar.gz") }
 end
 
-# install jruby
-install_from_release('jruby') do
-  release_url  "http://jruby.org.s3.amazonaws.com/downloads/#{version}/jruby-bin-#{version}.tar.gz"
-  home_dir     prefix
-  action       [:install, :install_binaries]
-  version      version
-  checksum node[:jruby_checksum]
-  has_binaries  %w(bin/jgem bin/jruby bin/jirb)
-  not_if       { File.exists?(prefix) }
-  notifies :create_if_missing, "file[/etc/profile.d/jruby.sh]"
+Chef::Log.info "Updating Sun JDK"
+#package "dev-java/sun-jdk" do
+#  version "1.6.0.26"
+#  action :upgrade
+#end
+
+bash "unzip jruby" do
+  user "root"
+  cwd "/tmp"
+  code %(tar -zxvf /tmp/jruby-#{node[:jruby_version]}.tar.gz)
+  not_if { File.exists? "/tmp/jruby-#{node[:jruby_version]}" }
 end
+
+bash "copy jruby root" do
+  user "root"
+  cwd "/tmp"
+  code %(mkdir /usr/lib/jruby/#{node[:jruby_version]} && cp -r /tmp/jruby-#{node[:jruby_version]}/* /usr/lib/jruby/#{node[:jruby_version]})
+  not_if { File.exists? "/usr/lib/jruby/#{node[:jruby_version]}/lib" }
+end
+
+bash "Add to path" do
+  code %(export PATH=/usr/lib/jruby/#{node[:jruby_version]}/bin:\$PATH)
+end
+
+
+Chef::Log.info "symlinks"
+link "/usr/bin/jruby" do
+  to "/usr/lib/jruby/#{node[:jruby_version]}/bin/jruby"
+end
+link "/usr/bin/ruby" do
+  to "/usr/lib/jruby/#{node[:jruby_version]}/bin/jruby"
+end
+link "/usr/lib64/jruby/1.6/bin/jruby" do
+  to "/usr/lib/jruby/#{node[:jruby_version]}/bin/jruby"
+end
+link "/usr/bin/bundle" do
+  to "/usr/lib/jruby/#{node[:jruby_version]}/bin/bundle"
+end
+
+
 
 if node[:jruby_nailgun]
   include_recipe "jruby::nailgun"
 end
 
 # install all gems defined in the module
+=begin
 node[:jruby_gems].each do |gem|
   if gem.is_a? Hash
     name = gem.delete(:name)
@@ -55,8 +83,10 @@ node[:jruby_gems].each do |gem|
   end
   jruby_gem name, gem || {}
 end
+=end
 
 # create symlink for ruby and gems
+=begin
 link "/usr/local/bin/ruby" do
   to "/usr/bin/jruby"
 end
@@ -64,5 +94,4 @@ end
 link "/usr/local/bin/gem" do
   to "/usr/bin/jgem"
 end
-
-
+=end

@@ -15,7 +15,8 @@
 require_recipe "ey_memcached_util"
 
 #Jruby
-require_recipe "jruby_17"
+#require_recipe "java"
+#require_recipe "jruby_17"
 
 #uncomment ot run the riak recipe
 # require_recipe "riak"
