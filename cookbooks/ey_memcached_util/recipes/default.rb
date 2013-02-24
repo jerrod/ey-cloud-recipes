@@ -1,6 +1,6 @@
 # change these to suit your needs
 utility_name = 'memcached'
-memory_usage = 2048 # MB
+memory_usage = 5120 # MB
 memcached_version = '1.4.5'
 
 # service
@@ -30,7 +30,7 @@ if host
       end
     end
   end
-  
+
   # utility instance
   if node[:instance_role] == 'util' && node[:name] == utility_name
     # install memcached
@@ -39,13 +39,13 @@ if host
       command "echo '#{package}' >> /etc/portage/package.keywords/local"
       not_if "grep #{package} /etc/portage/package.keywords/local"
     end
-    
+
     package "net-misc/memcached" do
       action :install
       version memcached_version
       notifies :restart, resources(:service => "memcached"), :delayed
     end
-  
+
     # conf
     template "/etc/conf.d/memcached" do
       owner "root"
@@ -59,7 +59,7 @@ if host
       })
       notifies :restart, resources(:service => "memcached"), :delayed
     end
-    
+
     # monit
     remote_file "/etc/monit.d/memcached.monitrc" do
       owner "root"
@@ -69,7 +69,7 @@ if host
       backup false
       action :create
     end
-    
+
     execute "monit quit && sleep 2"
   end
 end
