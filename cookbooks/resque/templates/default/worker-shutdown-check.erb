@@ -11,7 +11,7 @@ shutdown() {
   echo "Instance scheduled for shutdown"
 }
 
-shutdown_if_forked() {
+shutdown_if_finished() {
   ps aux | grep resque | grep -i processing > /dev/null
   if [ $? == "1" ]; then
     echo "Workers have completed. Shutting instance down..."
@@ -20,5 +20,5 @@ shutdown_if_forked() {
 }
 
 if [ -e "$APP_ROOT/tmp/worker-shutdown.txt" ]; then
-  shutdown_if_forked
+  shutdown_if_finished
 fi

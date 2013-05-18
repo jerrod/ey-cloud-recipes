@@ -40,7 +40,7 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
 
   cron "run_worker_shutdown_check" do
     hour    "*"
-    minute  "*"
+    minute  "*/3"
     command "/engineyard/bin/worker-shutdown-check"
   end
 
@@ -73,6 +73,24 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
 
       workers.each_with_index do |queue, index|
         template "/data/#{app}/shared/config/resque_#{index}.conf" do
+          owner node[:owner_name]
+          group node[:owner_name]
+          mode 0644
+          variables({:queue => queue})
+          source "resque_wildcard.conf.erb"
+        end
+      end
+
+      directory "/mnt/dynamiccreative/resque" do
+        recursive true
+        owner node[:owner_name]
+        group node[:owner_name]
+        mode 0755
+      end
+
+      # Store resque configs here for now as we are having troubles with EY above
+      workers.each_with_index do |queue, index|
+        template "/mnt/dynamiccreative/resque/resque_#{index}.conf" do
           owner node[:owner_name]
           group node[:owner_name]
           mode 0644
