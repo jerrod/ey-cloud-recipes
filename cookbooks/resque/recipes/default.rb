@@ -6,7 +6,7 @@
 if ['app_master', 'app'].include?(node[:instance_role])
   redis_instance = node['utility_instances'].find { |instance| instance['name'] == 'redis' }
 
-  node[:applications].reject{ |app, _| app != 'dynamiccreative' }.each do |app, data|
+  node[:applications].each do |app, data|
     # Used to set the redis hostname for the worker
     template "/data/#{app}/shared/config/resque.yml" do
       owner node[:owner_name]
