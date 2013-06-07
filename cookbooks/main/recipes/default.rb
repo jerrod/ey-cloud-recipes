@@ -1,3 +1,6 @@
 require_recipe "resque"
 require_recipe "redis"
-require_recipe "newrelic_server_monitoring"
+
+if node[:environment][:framework_env] == 'production'
+  require_recipe "newrelic_server_monitoring"
+end
