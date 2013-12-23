@@ -1,4 +1,3 @@
-
 queues({
   :all => {
     :groupa => {
@@ -23,11 +22,7 @@ queues({
     },
     :groupc => {
       :perf => [
-        :performance_aggregation,
-        :performance_download,
-        :performance_import,
-        :performance_keyword_sync,
-        :performance_ad_sync
+        :performance
       ]
     }
   }
