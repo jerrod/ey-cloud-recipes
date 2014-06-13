@@ -15,6 +15,6 @@ Enabling this recipe
 ---------------------------
 
 * Edit main/recipes/default.rb and comment out the line shown below.
-``include_recipe "rds"``
+``require_recipe "rds"``
 * Alter the rds/attributes/rds.rb file to include your connection
   information.
