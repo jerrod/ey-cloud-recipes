@@ -11,6 +11,9 @@ queues({
       ]
     },
     :groupb => {
+       # temporary so we dont lose jobs during deployment
+       # delete monday (june 16 2014)
+      :gen => [ :generation, :vendor_instance ],
       :pub => [
         :publication,
         :publication,
