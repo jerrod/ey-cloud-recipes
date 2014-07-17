@@ -20,7 +20,7 @@ queues({
     },
     :groupc => {
       :perf => [
-        :performance_aggregation
+        :performance_aggregation,
         :performance_download,
         :performance_import
       ]
