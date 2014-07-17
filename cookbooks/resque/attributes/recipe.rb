@@ -20,9 +20,9 @@ queues({
     },
     :groupc => {
       :perf => [
-        :performance_aggregation,
-        :performance_download,
-        :performance_import
+          [:performance_aggregation,:gen_vendor_instance],
+          [:performance_download,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance]
       ]
     },
     :groupd => {
