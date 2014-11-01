@@ -5,9 +5,18 @@
 
 if ['util'].include?(node[:instance_role])
 
-execute "install_redis_1.3.7_pre1" do
-  command "ACCEPT_KEYWORDS=\"~amd64 ~x86\" emerge -v dev-db/redis"
-  not_if { FileTest.exists?("/usr/bin/redis-server") }
+execute "set_overcommit_memory" do
+  command "echo 1 > /proc/sys/vm/overcommit_memory"
+  action :run
+end
+
+enable_package "dev-db/redis" do
+  version "2.0.4"
+end
+
+package "dev-db/redis" do
+  version "2.0.4"
+  action :upgrade
 end
 
 directory "/data/redis" do
@@ -15,6 +24,7 @@ directory "/data/redis" do
   group 'redis'
   mode 0755
   recursive true
+  action :create
 end
 
 template "/etc/redis_util.conf" do
@@ -28,7 +38,7 @@ template "/etc/redis_util.conf" do
     :logfile => '/data/redis/redis.log',
     :port  => '6379',
     :loglevel => 'notice',
-    :timeout => 3000,
+    :timeout => 300000,
   })
 end
 
