@@ -52,22 +52,27 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
       # Determine the array of workers dependent on the queue identifier provided
       key     = worker_class[0]
       queues  = node[:queues]
-      workers = [ key ] * 5   # Fallback
 
       if queues.has_key?(key) || key.nil?
         workers = queues[:all].values.map { |v| v.values }.flatten
       else
         queues[:all].each do |(group, subgroups)|
-          if group == key
-            workers = subgroups.values.flatten
-            break
+          if (groupmatch = (group == key)) || subgroups.has_key?(key)
+            subgroups.each do |(subgroup, queues)|
+              if groupmatch || subgroup == key
+                # preserve workers who have multiple
+                # queues in prioritised order
+                # e.g. :campaign, :ad_group, :keyword, :ad
+                queues.each do |queue|
+                  (workers ||= []) << queue
+                end
+
+                break if subgroup == key
+              end
+            end
+
+            break if groupmatch || subgroups.has_key?(key)
           end
-        subgroups.each do |(subgroup, queues)|
-          if subgroup == key
-            workers = queues
-            break
-          end
-        end
         end
       end
 
@@ -76,6 +81,11 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
           owner node[:owner_name]
           group node[:owner_name]
           mode 0644
+          # allow individual processes to handle alternate jobs
+          # when their first (primary) queue is empty
+          # e.g. primary, secondary, tertiary, other
+          queue = queue.join(',') if queue.is_a?(Array)
+
           variables({:queue => queue})
           source "resque_wildcard.conf.erb"
         end
@@ -89,15 +99,15 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
       end
 
       # Store resque configs here for now as we are having troubles with EY above
-      workers.each_with_index do |queue, index|
-        template "/mnt/dynamiccreative/resque/resque_#{index}.conf" do
-          owner node[:owner_name]
-          group node[:owner_name]
-          mode 0644
-          variables({:queue => queue})
-          source "resque_wildcard.conf.erb"
-        end
-      end
+      # workers.each_with_index do |queue, index|
+      #   template "/mnt/dynamiccreative/resque/resque_#{index}.conf" do
+      #     owner node[:owner_name]
+      #     group node[:owner_name]
+      #     mode 0644
+      #     variables({:queue => queue})
+      #     source "resque_wildcard.conf.erb"
+      #   end
+      # end
 
       template "/etc/monit.d/resque_#{app}.monitrc" do
         owner 'root'

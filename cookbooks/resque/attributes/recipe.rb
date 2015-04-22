@@ -29,11 +29,9 @@ queues({
     },
     :groupc => {
       :perf => [
-        :performance_aggregation,
-        :performance_download,
-        :performance_import,
-        :performance_keyword_sync,
-        :performance_ad_sync
+          [:performance_aggregation,:gen_vendor_instance],
+          [:performance_download,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance]
       ]
     },
     :groupd => {
@@ -88,8 +86,6 @@ queues({
         [:volatile_gen_keyword,:volatile_gen_ad,:volatile_gen_ad_group,:volatile_gen_campaign,:volatile_gen_vendor_instance],
       ],
       :volatile_pub => [
-        :volatile_publication,
-        :volatile_publication,
         :volatile_publication,
         :volatile_publication
       ]
