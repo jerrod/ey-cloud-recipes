@@ -11,24 +11,52 @@ queues({
       ]
     },
     :groupb => {
-      :gen => [
-        :generation,
-        :generation,
-        :vendor_instance
-      ],
       :pub => [
+        :publication,
+        :publication,
         :publication,
         :publication
       ]
     },
     :groupc => {
       :perf => [
-        :performance_aggregation,
-        :performance_download,
-        :performance_import,
-        :performance_keyword_sync,
-        :performance_ad_sync
+          [:performance_aggregation,:gen_vendor_instance],
+          [:performance_download,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance]
       ]
+    },
+    :groupd => {
+      :gen_campaign => [
+        [:gen_campaign,:gen_ad_group,:gen_keyword,:gen_ad,:gen_vendor_instance],
+        [:gen_campaign,:gen_ad_group,:gen_keyword,:gen_ad,:gen_vendor_instance],
+        [:gen_campaign,:gen_ad_group,:gen_keyword,:gen_ad,:gen_vendor_instance],
+        [:gen_campaign,:gen_ad_group,:gen_keyword,:gen_ad,:gen_vendor_instance],
+      ],
+      :gen_ad_group => [
+        [:gen_ad_group,:gen_keyword,:gen_ad,:gen_campaign,:gen_vendor_instance],
+        [:gen_ad_group,:gen_keyword,:gen_ad,:gen_campaign,:gen_vendor_instance],
+        [:gen_ad_group,:gen_keyword,:gen_ad,:gen_campaign,:gen_vendor_instance],
+        [:gen_ad_group,:gen_keyword,:gen_ad,:gen_campaign,:gen_vendor_instance],
+      ],
+      :gen_ad => [
+        [:gen_ad,:gen_ad_group,:gen_keyword,:gen_campaign,:gen_vendor_instance],
+        [:gen_ad,:gen_ad_group,:gen_keyword,:gen_campaign,:gen_vendor_instance],
+        [:gen_ad,:gen_ad_group,:gen_keyword,:gen_campaign,:gen_vendor_instance],
+        [:gen_ad,:gen_ad_group,:gen_keyword,:gen_campaign,:gen_vendor_instance],
+      ],
+      :gen_keyword => [
+        [:gen_keyword,:gen_ad,:gen_ad_group,:gen_campaign,:gen_vendor_instance],
+        [:gen_keyword,:gen_ad,:gen_ad_group,:gen_campaign,:gen_vendor_instance],
+        [:gen_keyword,:gen_ad,:gen_ad_group,:gen_campaign,:gen_vendor_instance],
+        [:gen_keyword,:gen_ad,:gen_ad_group,:gen_campaign,:gen_vendor_instance],
+      ]
+    },
+    :group_develop => {
+      :gen_campaign => [ :gen_campaign ],
+      :gen_ad_group => [ :gen_ad_group ],
+      :gen_ad => [ :gen_ad ],
+      :gen_keyword => [ :gen_keyword ],
+      :inventory => [:inventory, :schedule, :cloning, :notification ],
     }
   }
 })

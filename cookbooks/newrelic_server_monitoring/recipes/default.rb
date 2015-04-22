@@ -17,12 +17,21 @@ template "/etc/newrelic/nrsysmond.cfg" do
     :key   => node[:newrelic][:license_key])
 end
 
-remote_file "/etc/monit.d/nrsysmond.monitrc" do
+tokens = File.read("/etc/descriptive_hostname").split(".")
+descriptive_hostname =
+  if tokens.size > 4
+    "#{tokens[2]}_#{tokens[3]}"
+  else
+    tokens[2]
+  end
+
+template "/etc/monit.d/nrsysmond.monitrc" do
+  source "nrsysmond.monitrc.erb"
   owner "root"
   group "root"
   mode 0644
   backup 0
-  source "nrsysmond.monitrc"
+  variables({ :name => descriptive_hostname.strip })
 end
 
 directory "/var/log/newrelic" do
