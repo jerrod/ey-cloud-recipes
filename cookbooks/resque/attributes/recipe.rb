@@ -97,6 +97,16 @@ queues({
         :publication
       ]
     },
+    :groupf => {
+      :perf => [
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance]
+      ]
+    },
     :group_develop => {
       :gen_campaign => [ :gen_campaign ],
       :gen_ad_group => [ :gen_ad_group ],
