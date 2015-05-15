@@ -111,7 +111,7 @@ queues({
       :gen_ad => [
         :gen_ad
       ]
-    }
+    },
     :group_develop => {
       :gen_campaign => [ :gen_campaign ],
       :gen_ad_group => [ :gen_ad_group ],
