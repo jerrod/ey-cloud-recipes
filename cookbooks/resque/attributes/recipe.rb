@@ -98,6 +98,33 @@ queues({
         :publication
       ]
     },
+    :groupf => {
+      :perf => [
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance],
+          [:performance_import,:gen_vendor_instance]
+      ]
+    },
+    :groupg => {
+      :gen_ad => [
+        :gen_ad
+      ]
+    },
+    :grouph => {
+      :gen_ad => [
+        :gen_ad,
+        :gen_ad,
+        :gen_ad,
+        :gen_ad,
+        :gen_ad,
+        :gen_ad,
+        :gen_ad,
+        :gen_ad
+      ]
+    },
     :group_develop => {
       :gen_campaign => [ :gen_campaign ],
       :gen_ad_group => [ :gen_ad_group ],
