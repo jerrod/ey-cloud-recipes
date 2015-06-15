@@ -25,7 +25,8 @@ queues({
         :publication,
         :volatile_publication
       ],
-      :inventory => [:inventory]
+      :inventory => [:inventory],
+      :notification => [:notification]
     },
     :groupc => {
       :perf => [
