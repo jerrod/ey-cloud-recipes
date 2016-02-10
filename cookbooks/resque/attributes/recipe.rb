@@ -125,6 +125,26 @@ queues({
         :gen_ad
       ]
     },
+    :group_app2 => {
+      :performance_data => [
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+        [:performance_download,:performance_import,:performance_aggregation],
+      ]
+    },
     :group_develop => {
       :generation => [
         [:gen_campaign,:gen_ad_group,:gen_ad,:gen_keyword,:performance_download,:performance_import,:performance_aggregation],
