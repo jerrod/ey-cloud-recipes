@@ -6,7 +6,7 @@
 # if you want to have more than one tunnel set up on a given instance
 # (which should be fairly rare) then copy the entire cookbook with a
 # different top level name (don't change any filenames in it) and change 
-# this value to match before deploying.  Oh, and be sure to add a require_recipe 
+# this value to match before deploying.  Oh, and be sure to add a include_recipe 
 # line with the new cookbook name to the main cookbook's default.rb recipe file
 tunnel_name = 'ssh_tunnel'
 
@@ -24,12 +24,12 @@ tunnel_vars = {
   # the path to the public key on the instance the tunnel is from
   :ssh_public_key => '',
   # the port that will be being forwarded
-  :connect_port => ,
+  :connect_port => '',
   # the host on the remote side (or local side for a reverse tunnel) 
   # that the :connect_port will be forwarded to
   :forward_host => '',
   # the port on :forward_host that :connect_port will be forwarded to
-  :forward_port => ,
+  :forward_port => '',
   # valid values: FWD, REV, DUAL. Determines what kind of tunnel(s) to create
   # DUAL means create both a forward and reverse tunnel
   :tunnel_direction => '', 
@@ -39,7 +39,7 @@ tunnel_vars = {
   :skip_hostkey_auth => false,
   # the path to the known hosts file with the public key of the remote server
   # only set if :skip_hostkey_auth is set to false
-  # note that if :skip_hostkey_auth is set to false then you need to make a
+  # note that if :skip_hostkey_auth is set to true then you need to make a
   # manual connection to the remote host *before* deploying this recipe
   # and use the path to the known_hosts file that the remote host's public 
   # key is written to here.  It's also even better to copy that key entry to 
