@@ -44,7 +44,7 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
     command "/engineyard/bin/worker-shutdown-check"
   end
 
-  node[:applications].reject{ |app, _| app != 'dynamiccreative' }.each do |app, data|
+  node[:applications].select{ |app, _| ['dynamiccreative', 'performance_dc'].include? app }.each do |app, data|
 
     # Find what queue group or queue this worker is configured to use (based on the name)
     node[:name].scan(/worker_([a-z_]*)_[0-9]*/i) do |worker_class|
@@ -91,7 +91,7 @@ if (['util'].include?(node[:instance_role]) && node[:name] =~ /^worker/i) || nod
         end
       end
 
-      directory "/mnt/dynamiccreative/resque" do
+      directory "/mnt/#{app}/resque" do
         recursive true
         owner node[:owner_name]
         group node[:owner_name]
