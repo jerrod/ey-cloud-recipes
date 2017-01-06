@@ -14,6 +14,9 @@
 #require_recipe "memcached"
 require_recipe "ey_memcached_util"
 
+# uncomment to use the block recipe. See cookbooks/block/readme.md for documentation.
+ include_recipe "ban"
+
 #Jruby
 #require_recipe "java"
 #require_recipe "jruby_17"
