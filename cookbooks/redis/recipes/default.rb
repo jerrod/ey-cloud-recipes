@@ -4,49 +4,65 @@
 #
 
 if ['util'].include?(node[:instance_role])
+  if node[:name] == 'redis'
 
-execute "install_redis_1.3.7_pre1" do
-  command "ACCEPT_KEYWORDS=\"~amd64 ~x86\" emerge -v dev-db/redis"
-  not_if { FileTest.exists?("/usr/bin/redis-server") }
-end
+    sysctl "Enable Overcommit Memory" do
+      variables 'vm.overcommit_memory' => 1
+    end
 
-directory "/data/redis" do
-  owner 'redis'
-  group 'redis'
-  mode 0755
-  recursive true
-end
+    enable_package "dev-db/redis" do
+      version "2.4.6"
+    end
 
-template "/etc/redis_util.conf" do
-  owner 'root'
-  group 'root'
-  mode 0644
-  source "redis.conf.erb"
-  variables({
-    :pidfile => '/var/run/redis_util.pid',
-    :basedir => '/data/redis',
-    :logfile => '/data/redis/redis.log',
-    :port  => '6379',
-    :loglevel => 'notice',
-    :timeout => 3000,
-  })
-end
+    package "dev-db/redis" do
+      version "2.4.6"
+      action :upgrade
+    end
 
-template "/data/monit.d/redis_util.monitrc" do
-  owner 'root'
-  group 'root'
-  mode 0644
-  source "redis.monitrc.erb"
-  variables({
-    :profile => '1',
-    :configfile => '/etc/redis_util.conf',
-    :pidfile => '/var/run/redis_util.pid',
-    :logfile => '/data/redis',
-    :port => '6379',
-  })
-end
+    directory "#{node[:redis][:basedir]}" do
+      owner 'redis'
+      group 'redis'
+      mode 0755
+      recursive true
+      action :create
+    end
 
-execute "monit reload" do
-  action :run
-end
+    template "/etc/redis_util.conf" do
+      owner 'root'
+      group 'root'
+      mode 0644
+      source "redis.conf.erb"
+      variables({
+                  :pidfile => node[:redis][:pidfile],
+                  :basedir => node[:redis][:basedir],
+                  :basename => node[:redis][:basename],
+                  :logfile => node[:redis][:logfile],
+                  :loglevel => node[:redis][:loglevel],
+                  :port  => node[:redis][:bindport],
+                  :unixsocket => node[:redis][:unixsocket],
+                  :saveperiod => node[:redis][:saveperiod],
+                  :timeout => node[:redis][:timeout],
+                  :databases => node[:redis][:databases],
+                  :rdbcompression => node[:redis][:rdbcompression],
+                })
+    end
+
+    template "/data/monit.d/redis_util.monitrc" do
+      owner 'root'
+      group 'root'
+      mode 0644
+      source "redis.monitrc.erb"
+      variables({
+                  :profile => '1',
+                  :configfile => '/etc/redis_util.conf',
+                  :pidfile => node[:redis][:pidfile],
+                  :logfile => node[:redis][:basename],
+                  :port => node[:redis][:bindport],
+                })
+    end
+
+    execute "monit reload" do
+      action :run
+    end
+  end
 end
